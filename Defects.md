@@ -36,7 +36,7 @@ When bank_country_code is AU or CN, payment_methods can not support LOCAL, reque
   "source": "payment_methods.0" 
 }`  
 
-    -Response when bank_country_code is CN:   
+    -Response when bank_country_code is CN: 
 `{  
   "code": "payment_schema_validation_failed", 
   "message": "This field is required",  
@@ -46,6 +46,7 @@ When bank_country_code is AU or CN, payment_methods can not support LOCAL, reque
 【Expect】  
 not for sure that LOCAL payment methods is support to AU or CN  
 need to confirm 
+
 【Screenshot】
 ![avatar](/Users/gaoyuhang/Downloads/1.png) 
 
