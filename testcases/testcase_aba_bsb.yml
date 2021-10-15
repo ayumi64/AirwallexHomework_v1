@@ -1,0 +1,289 @@
+
+
+config:
+    name: "/api/v1/beneficiaries/create"
+    base_url: "https://api-demo.airwallex.com"
+    verify: False
+    parameters: 
+      account_routing_type1: [bsb, aba]
+
+teststeps:
+-
+    name: get_Token
+    request:
+        method: POST
+        url: /api/v1/authentication/login
+        headers:
+            User-Agent: HttpRunner/${get_httprunner_version()}
+            Content-Type: "application/json"
+            x-api-key: "2308e2dd300f6b959b7f4e0a52ba9181186fc92f075f7e64ee9fa0b6b1ada094c39c9a9f39f06693d06b17067f78d4e7"
+            x-client-id: "KJbr_Xs5TLmhY03JWSi3NQ"
+        data: ""
+    extract: 
+        token: content.token
+    validate:
+        - eq: ["status_code", 201]
+
+-
+    name: aba_bsb_CN
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": $account_routing_type1,
+      "account_routing_value1": "021000021",
+      "bank_country_code": "CN",
+      "bank_name": "JP Morgan Chase Bank",
+      "swift_code": "PCBCCNBJSZX"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "SWIFT"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 201]
+        - eq: [content.beneficiary.bank_details.account_routing_type1, $account_routing_type1]
+        - eq: [content.beneficiary.bank_details.bank_country_code, CN]
+
+-
+    name: bsb_AU
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Melbourne",
+      "country_code": "AU",
+      "postcode": "3000",
+      "state": "VIC",
+      "street_address": "18 William Street"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "716978952",
+      "account_routing_type1": "bsb",
+      "bank_country_code": "AU",
+      "bank_name": "National Australia Bank Limited",
+      "swift_code": "NATAAU3302S"
+    },
+    "company_name": "Complete Concrete Pty Ltd",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "Complete Concrete Pty Ltd",
+  "payment_methods": [
+    "SWIFT"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 201]
+        - eq: [content.beneficiary.bank_details.account_routing_type1, bsb]
+        - eq: [content.beneficiary.bank_details.bank_country_code, AU]
+
+
+-
+    name: bsb_US
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": "bsb",
+      "account_routing_value1": "021000021",
+      "bank_country_code": "US",
+      "bank_name": "JP Morgan Chase Bank",
+      "local_clearing_system": "ACH"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "LOCAL"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 400]
+        - eq: [content.message, Should equal aba]
+        - eq: [content.source, beneficiary.bank_details.account_routing_type1]
+
+
+-
+    name: aba_US_9
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": "aba",
+      "account_routing_value1": "021000021",
+      "bank_country_code": "US",
+      "bank_name": "JP Morgan Chase Bank",
+      "local_clearing_system": "ACH"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "LOCAL"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 201]
+        - eq: [content.beneficiary.bank_details.account_routing_type1, aba]
+        - eq: [content.beneficiary.bank_details.bank_country_code, US]
+
+
+-
+    name: aba_US_10
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": "aba",
+      "account_routing_value1": "0210000210",
+      "bank_country_code": "US",
+      "bank_name": "JP Morgan Chase Bank",
+      "local_clearing_system": "ACH"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "LOCAL"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 400]
+        - eq: [content.message, Should be 9 characters long]
+
+
+-
+    name: aba_AU
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "AUjohn.walker@gmail.com"
+    },
+    "address": {
+      "city": "Melbourne",
+      "country_code": "AU",
+      "postcode": "3000",
+      "state": "VIC",
+      "street_address": "18 William Street"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "716978952",
+      "account_routing_type1": "aba",
+      "bank_country_code": "AU",
+      "bank_name": "National Australia Bank Limited",
+      "swift_code": "NATAAU3302S"
+    },
+    "company_name": "Complete Concrete Pty Ltd",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "Complete Concrete Pty Ltd",
+  "payment_methods": [
+    "SWIFT"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 400]
+        - eq: [content.message, Should equal bsb]

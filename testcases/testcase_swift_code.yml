@@ -1,0 +1,325 @@
+
+
+config:
+    name: "/api/v1/beneficiaries/create"
+    base_url: "https://api-demo.airwallex.com"
+    verify: False
+
+teststeps:
+-
+    name: get_Token
+    request:
+        method: POST
+        url: /api/v1/authentication/login
+        headers:
+            User-Agent: HttpRunner/${get_httprunner_version()}
+            Content-Type: "application/json"
+            x-api-key: "2308e2dd300f6b959b7f4e0a52ba9181186fc92f075f7e64ee9fa0b6b1ada094c39c9a9f39f06693d06b17067f78d4e7"
+            x-client-id: "KJbr_Xs5TLmhY03JWSi3NQ"
+        data: ""
+    extract: 
+        token: content.token
+    validate:
+        - eq: ["status_code", 201]
+
+-
+    name: swift_code_CN
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": "aba",
+      "bank_country_code": "CN",
+      "bank_name": "JP Morgan Chase Bank",
+      "swift_code": "ICBKCNBJ"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "SWIFT"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 201]
+        - eq: [content.beneficiary.bank_details.swift_code, ICBKCNBJ]
+        - eq: [content.beneficiary.bank_details.bank_country_code, CN]
+
+
+-
+    name: swift_code_US
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": "aba",
+      "bank_country_code": "US",
+      "bank_name": "JP Morgan Chase Bank",
+      "swift_code": "CHASUS33"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "SWIFT"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 201]
+        - eq: [content.beneficiary.bank_details.swift_code, CHASUS33]
+        - eq: [content.beneficiary.bank_details.bank_country_code, US]
+
+-
+    name: swift_code_AU
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": "aba",
+      "bank_country_code": "AU",
+      "bank_name": "JP Morgan Chase Bank",
+      "swift_code": "CITIAUSX"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "SWIFT"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 201]
+        - eq: [content.beneficiary.bank_details.swift_code, CITIAUSX]
+        - eq: [content.beneficiary.bank_details.bank_country_code, AU]
+
+
+-
+    name: swift_code_CN_abnormal
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": "aba",
+      "bank_country_code": "CN",
+      "bank_name": "JP Morgan Chase Bank",
+      "swift_code": "ICBKUSBJ"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "SWIFT"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 400]
+        - eq: [content.message, Should be a valid and supported SWIFT code / BIC]
+
+
+-
+    name: swift_code_US_abnormal
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": "aba",
+      "bank_country_code": "US",
+      "bank_name": "JP Morgan Chase Bank",
+      "swift_code": "CHAUS33AAA"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "SWIFT"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 400]
+        - eq: [content.message, Should be a valid and supported SWIFT code / BIC]
+
+
+-
+    name: swift_code_AU_abnormal
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": "aba",
+      "bank_country_code": "US",
+      "bank_name": "JP Morgan Chase Bank",
+      "swift_code": "CITIAUSXAAA"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "SWIFT"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 400]
+        - contains: [content.message, The SWIFT code / BIC should match the bank location selected]
+
+
+-
+    name: swift_code_AU_abnormal_long
+    request:
+        method: POST
+        url: /api/v1/beneficiaries/create
+        headers:
+            Content-Type: "application/json"
+            Authorization: "Bearer $token"
+        json: {
+  "beneficiary": {
+    "additional_info": {
+      "personal_email": "john.walker@gmail.com"
+    },
+    "address": {
+      "city": "Seattle",
+      "country_code": "US",
+      "postcode": "98104",
+      "state": "Washington",
+      "street_address": "412 5th Avenue"
+    },
+    "bank_details": {
+      "account_currency": "USD",
+      "account_name": "John Walker",
+      "account_number": "50001121",
+      "account_routing_type1": "aba",
+      "bank_country_code": "AU",
+      "bank_name": "JP Morgan Chase Bank",
+      "swift_code": "CITIAUSXAAAA"
+    },
+    "company_name": "ABC University",
+    "entity_type": "COMPANY"
+  },
+  "nickname": "ABC University",
+  "payment_methods": [
+    "SWIFT"
+  ]
+}
+
+    validate:
+        - eq: ["status_code", 400]
+        - eq: [content.message, Should be a valid and supported SWIFT code / BIC]
