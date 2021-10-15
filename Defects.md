@@ -30,22 +30,25 @@ When bank_country_code is AU or CN, payment_methods can not support LOCAL, reque
 1.400 Bad Request 
 
     -Response when bank_country_code is AU: 
-`{
-  "code": "payment_schema_validation_failed",
-  "message": "Should equal SWIFT",
-  "source": "payment_methods.0"
-}`
+`{  
+  "code": "payment_schema_validation_failed", 
+  "message": "Should equal SWIFT",  
+  "source": "payment_methods.0" 
+}`  
 
-    -Response when bank_country_code is CN: 
-`{
-  "code": "payment_schema_validation_failed",
-  "message": "This field is required",
-  "source": "beneficiary.additional_info.business_registration_number"
-}`
+    -Response when bank_country_code is CN:   
+`{  
+  "code": "payment_schema_validation_failed", 
+  "message": "This field is required",  
+  "source": "beneficiary.additional_info.business_registration_number"  
+}`   
+
 【Expect】  
 not for sure that LOCAL payment methods is support to AU or CN  
 need to confirm 
+【Screenshot】
 ![avatar](/Users/gaoyuhang/Downloads/1.png) 
+
 
 #### 【No4】 Defect Description 
 when bank_country_code is AU, account_routing_type1 is not limited  
