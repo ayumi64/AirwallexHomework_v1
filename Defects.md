@@ -1,16 +1,15 @@
 ## Defects 
 
-#### No1 When request is passed， the status_code is not 200，but 201
+#### No1 When request is passed， the status_code is not 200，but 201 
 
-【Reproduction】
-1.send a normal request
-2.when the request is passed
-3.check the response
-【Results】
-status_code of the response is "200"
-【Expect】
-status_code is "200"
-
+【Reproduction】  
+1.send a normal request 
+2.when the request is passed  
+3.check the response  
+【Results】 
+status_code of the response is "200"  
+【Expect】  
+status_code is "200"  
 
 #### No2 Defact Description
 When account_name is moare than 10 characters, request is success
@@ -31,18 +30,18 @@ When bank_country_code is AU or CN, payment_methods can not support LOCAL, reque
 1.400 Bad Request
 
     -Response when bank_country_code is AU:
-{
+`{
   "code": "payment_schema_validation_failed",
   "message": "Should equal SWIFT",
   "source": "payment_methods.0"
-}
+}`
 
     -Response when bank_country_code is CN:
-{
+`{
   "code": "payment_schema_validation_failed",
   "message": "This field is required",
   "source": "beneficiary.additional_info.business_registration_number"
-}
+}`
 【Expect】
 not for sure that LOCAL payment methods is support to AU or CN
 need to confirm
